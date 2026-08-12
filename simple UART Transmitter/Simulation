@@ -1,0 +1,36 @@
+For:
+
+data_in = 10101010
+
+The UART sends the bits LSB first.
+
+UART frame
+Start   Data bits                  Stop
+  0     0 1 0 1 0 1 0 1             1
+
+So the serial tx output is approximately:
+
+0 → 0 → 1 → 0 → 1 → 0 → 1 → 0 → 1 → 1
+       Expected signals
+| Signal | Expected behavior       |
+| ------ | ----------------------- |
+| `tx`   | Starts at 1 when idle   |
+| `tx`   | Goes to 0 for start bit |
+| `tx`   | Sends 8 data bits       |
+| `tx`   | Goes to 1 for stop bit  |
+| `busy` | 1 during transmission   |
+| `busy` | 0 after transmission    |
+              Simple waveform
+              tx:
+      Start   Data Bits                  Stop
+        ↓          ↓                       ↓
+       ┌─┐   ┌──┐    ┌──┐    ┌────────────
+───────┘ └───┘  └────┘  └────┘
+       0   0 1 0 1 0 1 0 1       1
+
+busy:
+       ┌──────────────────────────┐
+───────┘                          └────────
+
+output.vcd
+Open this file using GTKWave to see the clk, start, data_in, tx, and busy signals.
